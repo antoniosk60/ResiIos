@@ -1,0 +1,141 @@
+{
+  "entities": {
+    "AuthorizedUser": {
+      "title": "AuthorizedUser",
+      "description": "Authorized user profile and role for Gavilan 181",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "displayName": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["ADMINISTRADOR", "CAPTURISTA"] },
+        "slotId": { "type": "string", "enum": ["0", "1", "2", "3", "4", "5"] },
+        "uid": { "type": "string", "maxLength": 128 },
+        "photoUrl": { "type": "string", "maxLength": 500 },
+        "addedBy": { "type": "string", "maxLength": 200 },
+        "addedAtMillis": { "type": "number" },
+        "lastActiveMillis": { "type": "number" }
+      },
+      "required": ["email", "role", "slotId", "addedBy", "addedAtMillis"]
+    },
+    "CapturistaSlot": {
+      "title": "CapturistaSlot",
+      "description": "Assigned slot (1 to 5) for a guardhouse capturista",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "slotId": { "type": "string", "enum": ["1", "2", "3", "4", "5"] },
+        "assignedAtMillis": { "type": "number" }
+      },
+      "required": ["email", "slotId", "assignedAtMillis"]
+    },
+    "Resident": {
+      "title": "Resident",
+      "description": "Residential unit and resident access record (ID: res_<id>)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "fullName": { "type": "string", "maxLength": 200 },
+        "houseNumber": { "type": "string", "maxLength": 60 },
+        "building": { "type": "string", "maxLength": 60 },
+        "apartment": { "type": "string", "maxLength": 60 },
+        "accessCode": { "type": "string", "maxLength": 60 },
+        "blockOrSection": { "type": "string", "maxLength": 80 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 200 },
+        "vehiclePlates": { "type": "string", "maxLength": 120 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "isMoroso": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "registeredDateMillis": { "type": "number" },
+        "createdBy": { "type": "string", "maxLength": 200 },
+        "lastModifiedBy": { "type": "string", "maxLength": 200 },
+        "lastModifiedDateMillis": { "type": "number" }
+      },
+      "required": ["id", "fullName", "houseNumber", "building", "apartment", "accessCode", "isMoroso", "isActive", "registeredDateMillis"]
+    },
+    "Visit": {
+      "title": "Visit",
+      "description": "Visitor entry/exit record (ID: visit_<id>)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "visitorName": { "type": "string", "maxLength": 200 },
+        "visitorIdOrIne": { "type": "string", "maxLength": 100 },
+        "visitorVehiclePlates": { "type": "string", "maxLength": 60 },
+        "building": { "type": "string", "maxLength": 60 },
+        "apartment": { "type": "string", "maxLength": 60 },
+        "residentId": { "type": "number" },
+        "residentName": { "type": "string", "maxLength": 200 },
+        "reason": { "type": "string", "maxLength": 200 },
+        "isResidentMoroso": { "type": "boolean" },
+        "accessStatus": { "type": "string", "enum": ["PERMITIDO", "SIN_CLAVE_MOROSO"] },
+        "accessCodeUsed": { "type": "string", "maxLength": 60 },
+        "entryTimestampMillis": { "type": "number" },
+        "exitTimestampMillis": { "type": "number" },
+        "registeredBy": { "type": "string", "maxLength": 200 },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "visitorName", "building", "apartment", "residentId", "residentName", "isResidentMoroso", "accessStatus", "entryTimestampMillis", "registeredBy"]
+    },
+    "Tardiness": {
+      "title": "Tardiness",
+      "description": "Resident tardiness or incident log (ID: tard_<id>)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "residentId": { "type": "number" },
+        "residentName": { "type": "string", "maxLength": 200 },
+        "houseNumber": { "type": "string", "maxLength": 60 },
+        "timestampMillis": { "type": "number" },
+        "reason": { "type": "string", "maxLength": 200 },
+        "vehiclePlate": { "type": "string", "maxLength": 60 },
+        "registeredBy": { "type": "string", "maxLength": 200 },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "residentId", "residentName", "houseNumber", "timestampMillis", "reason", "registeredBy"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable audit trail entry (ID: log_<id>)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "timestampMillis": { "type": "number" },
+        "userName": { "type": "string", "maxLength": 200 },
+        "userRole": { "type": "string", "maxLength": 50 },
+        "actionType": { "type": "string", "maxLength": 80 },
+        "entityType": { "type": "string", "maxLength": 80 },
+        "entityId": { "type": "number" },
+        "title": { "type": "string", "maxLength": 200 },
+        "details": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "timestampMillis", "userName", "userRole", "actionType", "entityType", "entityId", "title", "details"]
+    }
+  },
+  "firestore": {
+    "/authorized_users/{email}": {
+      "schema": { "$ref": "#/entities/AuthorizedUser" },
+      "description": "Authorized Google accounts keyed by lowercase email"
+    },
+    "/capturista_slots/{slotId}": {
+      "schema": { "$ref": "#/entities/CapturistaSlot" },
+      "description": "Up to 5 capturista slots (1..5)"
+    },
+    "/residents/{residentDocId}": {
+      "schema": { "$ref": "#/entities/Resident" },
+      "description": "Resident catalog keyed by res_<id>"
+    },
+    "/visits/{visitDocId}": {
+      "schema": { "$ref": "#/entities/Visit" },
+      "description": "Visitor entry and exit logs keyed by visit_<id>"
+    },
+    "/tardiness/{tardinessDocId}": {
+      "schema": { "$ref": "#/entities/Tardiness" },
+      "description": "Resident tardiness records keyed by tard_<id>"
+    },
+    "/audit_logs/{logDocId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Immutable audit trail keyed by log_<id>"
+    }
+  }
+}

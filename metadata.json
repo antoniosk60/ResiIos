@@ -1,0 +1,6 @@
+{
+  "name": "Gavilán 181 — Control de Acceso",
+  "description": "Control de acceso residencial, validación de claves, registro de visitas, retardos y auditoría para Gavilán 181 — Seguridad Privada Yaotecatl.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
